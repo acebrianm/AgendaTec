@@ -1,0 +1,38 @@
+<head>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<div class="row">
+  <div class="col-sm-3">
+  </div>
+  <div class="col-sm-6">
+    <h3 class="text-center">{{username}}</h3>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-3">
+  </div>
+  <div class="col-sm-6 col-sm-offset-2">
+    <form class="form-group" action="#" method="post">{% csrf_token %}
+      <table class="table-bordered">
+	<tbody>
+	  {{form}}
+	</tbody>
+      </table>
+      <div class="col-sm-3">
+	<a class="btn btn-secondary" href="{% url 'my_account' %}">Cancelar</a>
+      </div>
+      <div class="col-sm-3">
+	<input class="btn btn-secondary" type="submit" value="Guardar"/>
+      </div>
+    </form>
+  </div>
+</div>
