@@ -90,7 +90,7 @@
                 <p class="lead">Tags</p>
                 <div class="list-group">
                     {% for tag in tag_list %}
-                    <a href="#" class="list-group-item">{{tag}}</a>
+                    <a href="{% url "list" tag=tag.tag_name %}" class="list-group-item">{{ tag.tag_name }}</a>
                     {% endfor %}
                 </div>
             {% endif %}
