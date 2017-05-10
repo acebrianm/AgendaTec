@@ -6,6 +6,8 @@ urlpatterns = [
     url(r'^list/$', views.list, name='list'),
     url(r'^add_event/$', views.add_event, name='add_event'),
     url(r'^list/(?P<tag>[0-9a-zA-Z_]+)/$', views.list, name="list"),
+    url(r'^edit_event/(?P<event>[0-9]+)/$', views.edit_event,
+        name="edit_event"),
     url(r'^delete_event/(?P<event>[0-9]+)/$', views.delete_event,
         name="delete_event"),
     url(r'^detail/(?P<event>[0-9a-zA-Z_]+)/$', views.detail_event, name="detail"),
