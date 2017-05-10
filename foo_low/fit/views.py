@@ -102,6 +102,8 @@ def add_tag(request):
     context = {
         'form' : form,
     }
+    # Render the webpage
+    return HttpResponse(template.render(context, request))
 
 def list(request, tag=None):
 
