@@ -44,7 +44,7 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                <a class="navbar-brand" href="#">Agenda Tec</a>
+                <a class="navbar-brand" href="{% url 'index' %}">Agenda Tec</a>
                 {% if user.is_authenticated %}
                     {% if request.user.is_superuser %}
                     <li class="dropdown">
@@ -69,7 +69,7 @@
                         role="button" aria-haspopup="true"
                         aria-expanded="false">Mi cuenta <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Mis Tags</a></li>
+                        <li><a href="{% url 'my_account' %}">Mis Tags</a></li>
                         <li><a href="#">Cerrar sesi&oacuten</a></li>
                     </ul>
                     </li>
