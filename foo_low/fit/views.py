@@ -235,9 +235,9 @@ def edit_event(request, event):
     if not request.user.is_superuser:
         raise PermissionDenied
 
+    template = loader.get_template('fit/add_event.html')
     obj = get_object_or_404(Event, id=event)
     # Template render
-    template = loader.get_template('fit/list.html')
     
     # Create the form
     if request.method == 'POST':
