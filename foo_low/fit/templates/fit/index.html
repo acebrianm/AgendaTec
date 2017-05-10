@@ -70,7 +70,7 @@
                         aria-expanded="false">Mi cuenta <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="{% url 'my_account' %}">Mis Tags</a></li>
-                        <li><a href="#">Cerrar sesi&oacuten</a></li>
+                        <li><a href="{% url 'logout' %}">Cerrar sesi&oacuten</a></li>
                     </ul>
                     </li>
                 </ul>
@@ -81,6 +81,15 @@
         <!-- /.container -->
     </nav>
 
+    <!-- Messages -->
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}" {% endif %}> {{ message }} </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    
     <!-- Page Content -->
     <div class="container">
 
