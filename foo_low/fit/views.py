@@ -46,7 +46,23 @@ def log_out(request):
 
 # Webpage to follow or unfollow interests.
 def my_account(request):
+    """
+    Displays all the tags that are available and the ones
+    that you have selected appear with a marked in the checkbox
+    
+    **Context**
 
+    ``tags``
+        All the active tags in the :model:`fit.Tag`.
+    ``username``
+        An instance of the :model:`auth.User`
+    ``form``
+        An instance of the TagForm
+
+    **Template:**
+
+    :template:`fit/list_tags.html`
+    """
     # Data from tags
     tags = Tag.objects.all().filter(is_active=True)
     # Data from user
@@ -85,6 +101,18 @@ def my_account(request):
 
 # Add new tags
 def add_tag(request):
+    """
+    Add a new entry of :model:`fit.Tag`.
+    
+    **Context**
+
+    ``form``
+        An instance of the TagAdminForm
+
+    **Template:**
+
+    :template:`fit/add_tag.html`
+    """
     if not request.user.is_superuser:
         raise PermissionDenied
     # Template render
@@ -109,6 +137,35 @@ def add_tag(request):
     return HttpResponse(template.render(context, request))
 
 def list(request, tag=None):
+    """
+    Displays all the active events depending on the user, it is related with
+    :model:`fit.Event` and  :model:`fit.Tag`.
+
+    Superuser:
+        - Displays all the events from all categories
+        - Edit and Delete button appear at the bottom of each event
+        - New Event button
+
+    Normal User:
+        - Displays all the events that are in the categories that the user is
+          following
+
+    Select Tag:
+        - Displays all the events which have the selected tag
+    
+    **Context**
+
+    ``tag_list``
+        All tags that are active
+    ``events``
+        It is a zipped list with two list inside. The event list that have all
+        the entries that meets the queries conditions. The image is a list of
+        string that only contains the name of the image
+
+    **Template:**
+
+    :template:`fit/list.html`
+    """
 
     tag_list = Tag.objects.all().filter(is_active=True)
 
@@ -140,7 +197,22 @@ def list(request, tag=None):
 
 
 def detail_event(request, event=None):
+    """
+    Displays all the information from the selected event.
+    
+    **Context**
 
+    ``tag_list``
+        All tags that are active
+    ``event``
+        The entry of the selected event
+    ``image``
+        The name of the image in the current event
+
+    **Template:**
+
+    :template:`fit/detail.html`
+    """
     tag_list = Tag.objects.all().filter(is_active=True)
 
     if not request.user.is_authenticated or not event:
@@ -157,6 +229,19 @@ def detail_event(request, event=None):
     return HttpResponse(template.render(context, request))
 
 def edit_tag(request, tag):
+    """
+    Displays all the information from the selected tag and the admin is able to
+    edit the information inside.
+    
+    **Context**
+
+    ``form``
+        An instance of the TagAdminForm
+
+    **Template:**
+
+    :template:`fit/detail.html`
+    """
     if not request.user.is_superuser:
         raise PermissionDenied
     obj = get_object_or_404(Tag, id=tag)
@@ -185,6 +270,15 @@ def edit_tag(request, tag):
 
 # Delete existing tags
 def delete_tag(request, tag):
+    """
+    Does not display any view, just put the is_active state to False
+    
+    **Context**
+
+
+    **Template:**
+
+    """
     if not request.user.is_superuser:
         raise PermissionDenied
     obj = get_object_or_404(Tag, id=tag)
@@ -196,6 +290,21 @@ def delete_tag(request, tag):
     return my_account(request)
 
 def add_event(request):
+    """
+    Add a new entry of :model:`fit.Event`.
+    
+    **Context**
+
+    ``form``
+        An instance of the EventForm
+
+    **Template:**
+
+    :template:`fit/add_event.html`
+    """
+
+    if not request.user.is_superuser:
+        raise PermissionDenied
     # Template render
     template = loader.get_template('fit/add_event.html')
     
@@ -219,6 +328,15 @@ def add_event(request):
 
 # Delete existing events
 def delete_event(request, event):
+    """
+    Does not display any view, just put the is_active state to False
+    
+    **Context**
+
+
+    **Template:**
+
+    """
     if not request.user.is_superuser:
         raise PermissionDenied
 
@@ -232,6 +350,19 @@ def delete_event(request, event):
 
 # Edit an event
 def edit_event(request, event):
+    """
+    Displays all the information from the selected :model:`fit.Event` and the admin is able to
+    edit the information inside.
+    
+    **Context**
+
+    ``form``
+        An instance of the EventForm
+
+    **Template:**
+
+    :template:`fit/add_event.html`
+    """
     if not request.user.is_superuser:
         raise PermissionDenied
 
