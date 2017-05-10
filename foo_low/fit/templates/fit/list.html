@@ -13,8 +13,11 @@
 <div class="row">
 {% if events %}
     {% for event, image in events %}
+    {% if forloop.counter|divisibleby:3 %}
+    <div class="row">
+    {% endif %}
     <div class="col-sm-4 col-lg-4 col-md-4">
-        <div class="thumbnail">
+        <div class="thumbnail img-fluid">
             {% with 'fit/images/'|add:image as image_static %}
                 <img src="{% static image_static %}" alt="">
             {% endwith %}
@@ -22,12 +25,6 @@
                 <h4><a href="{% url 'detail' event=event.id %}">{{event.event_name}}</a>
                 </h4>
                 <h6 class="">{{ event.date }}</h6>
-                    <span> 
-                        <h6>
-                            <div>Active: {{event.is_active }}</div>
-                        </h6>
-                    </span>
-                </h6>
                 <p>{{ event.description | truncatechars:80 }}</p>
             </div>
             {% if user.is_superuser %}
@@ -38,6 +35,9 @@
             {% endif %}
         </div>
     </div>
+    {% if forloop.counter|divisibleby:3 %}
+        </div>
+    {% endif %}
     {% endfor %}
 {% else %}
 
