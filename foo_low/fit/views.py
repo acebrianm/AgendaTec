@@ -4,12 +4,9 @@ from django.contrib.auth import logout, authenticate, login
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from .models import Tag, Profile
-from .forms import TagForm
+from .models import Tag, Profile, Event
+from .forms import TagForm, TagAdminForm
 from datetime import datetime
-
-# Models
-from .models import Profile, Tag, Event
 
 # Index redirection in the website.
 def index(request):
@@ -50,35 +47,63 @@ def log_out(request):
 def my_account(request):
 
     # Data from tags
-    tag_list = Tag.objects.all().filter(is_active=True)
-
+    tags = Tag.objects.all().filter(is_active=True)
     # Data from user
     current_user = request.user
     username = current_user.username
     current_profile = Profile.objects.get(user=current_user)
-    sel_tags = current_profile.profile_tag.all()
 
-    # Template render
-    template = loader.get_template('fit/my_account.html')
-    
-    # Create the form
-    if request.method == 'POST':
-        form = TagForm(request.POST or None,
-                       request.FILES or None,
-                       instance=current_profile,)
-        if form.is_valid():
-            form.save()
+    if request.user.is_superuser:
+        template = loader.get_template('fit/list_tags.html')
+        form = {}
         
     else:
-        form = TagForm(instance=current_profile)
+        # Template render
+        template = loader.get_template('fit/my_account.html')
+    
+        # Create the form
+        if request.method == 'POST':
+            form = TagForm(request.POST or None,
+                           request.FILES or None,
+                           instance=current_profile,)
+            if form.is_valid():
+                form.save()
+        
+        else:
+            form = TagForm(instance=current_profile)
 
     # Context for rendering
     context = {
-        'tags' : tag_list,
+        'tags' : tags,
         'username' : username,
-        'sel_tags' : sel_tags,
         'form' : form,
     }
+
+    # Render the webpage
+    return HttpResponse(template.render(context, request))
+
+# Add new tags
+def add_tag(request):
+    # Template render
+    template = loader.get_template('fit/add_tag.html')
+    
+    # Create the form
+    if request.method == 'POST':
+        form = TagAdminForm(request.POST or None,
+                            request.FILES or None,)
+        if form.is_valid():
+            form.save()
+            return my_account(request)
+        
+    else:
+        form = TagAdminForm()
+
+    # Context for rendering
+    context = {
+        'form' : form,
+    }
+    # Render the webpage
+    return HttpResponse(template.render(context, request))
 
 def list(request, tag=None):
 
@@ -128,3 +153,39 @@ def detail_event(request, event=None):
 
 
 
+
+def edit_tag(request, tag):
+
+    obj = Tag.objects.get(id=tag)
+    # Template render
+    template = loader.get_template('fit/add_tag.html')
+    
+    # Create the form
+    if request.method == 'POST':
+        form = TagAdminForm(request.POST or None,
+                            request.FILES or None,
+                            instance=obj)
+        if form.is_valid():
+            form.save()
+            return my_account(request)
+        
+    else:
+        form = TagAdminForm(instance=obj)
+
+    # Context for rendering
+    context = {
+        'form' : form,
+    }
+
+    # Render the webpage
+    return HttpResponse(template.render(context, request))
+
+# Delete existing tags
+def delete_tag(request, tag):
+    obj = Tag.objects.get(id=tag)
+    try:
+        obj.is_active = False
+        obj.save()
+    except:
+        messages.error(request, 'There are values that are still referenced')
+    return my_account(request)
