@@ -115,14 +115,18 @@ def list(request, tag=None):
     if request.user.is_superuser:
         if tag:
             events = Event.objects.filter(event_tag__tag_name=tag).distinct()
+            events = events.filter(is_active=True)
         else:
             events = Event.objects.all().distinct()
+            events = events.filter(is_active=True)
     else:
         if tag:
             events = Event.objects.filter(event_tag__tag_name=tag).filter(date__gte=datetime.now()).filter(is_active=True).distinct()
+            events = events.filter(event_tag__is_active=True)
         else:
             user_tags = Profile.objects.get(id=request.user.id).profile_tag.all()
             events = Event.objects.filter(event_tag__in=user_tags).filter(is_active=True).filter(date__gte=datetime.now()).distinct() 
+            events = events.filter(event_tag__is_active=True)
     images = []
     for event in events:
         images.append(event.image.name.split('/')[4])
@@ -143,7 +147,6 @@ def detail_event(request, event=None):
         return index(request)
 
     ev = get_object_or_404(Event, id=event)
-    print(ev)
     template = loader.get_template("fit/detail.html")
     image = "fit/images/" + ev.image.name.split('/')[4]
     context = {
@@ -156,7 +159,7 @@ def detail_event(request, event=None):
 def edit_tag(request, tag):
     if not request.user.is_superuser:
         raise PermissionDenied
-    obj = Tag.objects.get(id=tag)
+    obj = get_object_or_404(Tag, id=tag)
     # Template render
     template = loader.get_template('fit/add_tag.html')
     
@@ -184,7 +187,7 @@ def edit_tag(request, tag):
 def delete_tag(request, tag):
     if not request.user.is_superuser:
         raise PermissionDenied
-    obj = Tag.objects.get(id=tag)
+    obj = get_object_or_404(Tag, id=tag)
     try:
         obj.is_active = False
         obj.save()
@@ -219,7 +222,7 @@ def delete_event(request, event):
     if not request.user.is_superuser:
         raise PermissionDenied
 
-    obj = Event.objects.get(id=event)
+    obj = get_object_or_404(Event, id=event)
     try:
         obj.is_active = False
         obj.save()
@@ -234,7 +237,7 @@ def edit_event(request, event):
 
     obj = get_object_or_404(Event, id=event)
     # Template render
-    template = loader.get_template('fit/add_tag.html')
+    template = loader.get_template('fit/list.html')
     
     # Create the form
     if request.method == 'POST':
