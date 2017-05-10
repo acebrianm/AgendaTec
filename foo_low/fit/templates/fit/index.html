@@ -50,20 +50,17 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle"
                             data-toggle="dropdown" role="button"
-                            aria-haspopup="true" aria-expanded="false">Inicio <span class="caret"></span></a>
+                            aria-haspopup="true" aria-expanded="false">CRUD <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="#">Eventos</a></li>
-                            <li><a href="#">Tags</a></li>
+                            <li><a href="{% url 'my_account' %}">Tags</a></li>
                         </ul>
-                    </li>       
-                    {% else %}
-                    <li>
-                        <a href="#">Inicio</a>
                     </li>
                     {% endif %}
 
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+                  {% if not request.user.is_superuser %}
                     <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"
                         role="button" aria-haspopup="true"
@@ -73,6 +70,9 @@
                         <li><a href="{% url 'logout' %}">Cerrar sesi&oacuten</a></li>
                     </ul>
                     </li>
+		    {% else %}
+		  <li><a href="{% url 'logout' %}">Cerrar sesi&oacuten</a></li>
+		  {% endif %}
                 </ul>
                 {% endif %}
             </div>

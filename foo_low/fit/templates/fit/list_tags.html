@@ -1,0 +1,24 @@
+{% extends 'fit/index.html' %}
+{% block content %}
+<div class="row">
+  <div class="col-sm-offset-2">
+    <a class="btn btn-secondary" href="{% url 'add_tag' %}">Agregar Tag</a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-6">
+    <table class="table table-bordered table-hover">
+      <tbody>
+	{% for tag in tags %}
+	<tr>
+	  <td>{{tag.tag_name}}</td>
+	  <td><a href="{% url 'edit_tag' tag=tag.id %}">Editar</a></td>
+	  <td><a href="{% url 'delete_tag' tag=tag.id %}">Eliminar</a></td>
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
