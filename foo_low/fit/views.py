@@ -226,3 +226,32 @@ def delete_event(request, event):
     except:
         messages.error(request, 'There are values that are still referenced')
     return list(request)
+
+# Edit an event
+def edit_event(request, event):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
+    obj = get_object_or_404(Event, id=event)
+    # Template render
+    template = loader.get_template('fit/add_tag.html')
+    
+    # Create the form
+    if request.method == 'POST':
+        form = EventForm(request.POST or None,
+                            request.FILES or None,
+                            instance=obj)
+        if form.is_valid():
+            form.save()
+            return index(request)
+        
+    else:
+        form = EventForm(instance=obj)
+
+    # Context for rendering
+    context = {
+        'form' : form,
+    }
+
+    # Render the webpage
+    return HttpResponse(template.render(context, request))
