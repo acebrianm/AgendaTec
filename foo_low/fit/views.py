@@ -110,6 +110,9 @@ def add_tag(request):
 
 def list(request, tag=None):
 
+    if not request.user.is_authenticated:
+        return index(request)
+
     tag_list = Tag.objects.all().filter(is_active=True)
 
     if request.user.is_superuser:
