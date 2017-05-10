@@ -2,10 +2,12 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.list, name='index'),
     url(r'^list/$', views.list, name='list'),
     url(r'^add_event/$', views.add_event, name='add_event'),
     url(r'^list/(?P<tag>[0-9a-zA-Z_]+)/$', views.list, name="list"),
+    url(r'^delete_event/(?P<event>[0-9]+)/$', views.delete_event,
+        name="delete_event"),
     url(r'^detail/(?P<event>[0-9a-zA-Z_]+)/$', views.detail_event, name="detail"),
     url(r'^my_account/$', views.my_account, name='my_account'),
     url(r'^login/$', views.log_in, name='login'),

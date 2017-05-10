@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from .models import Tag, Profile, Event
 from .forms import TagForm, TagAdminForm, EventForm
 from datetime import datetime
+from django.core.exceptions import PermissionDenied
 
 # Index redirection in the website.
 def index(request):
@@ -84,6 +85,8 @@ def my_account(request):
 
 # Add new tags
 def add_tag(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
     # Template render
     template = loader.get_template('fit/add_tag.html')
     
@@ -116,7 +119,7 @@ def list(request, tag=None):
             events = Event.objects.all().distinct()
     else:
         if tag:
-            events = Event.objects.filter(event_tag__tag_name=tag).filter(date__gte=datetime.now()).distinct()
+            events = Event.objects.filter(event_tag__tag_name=tag).filter(date__gte=datetime.now()).filter(is_active=True).distinct()
         else:
             user_tags = Profile.objects.get(id=request.user.id).profile_tag.all()
             events = Event.objects.filter(event_tag__in=user_tags).filter(is_active=True).filter(date__gte=datetime.now()).distinct() 
@@ -151,7 +154,8 @@ def detail_event(request, event=None):
     return HttpResponse(template.render(context, request))
 
 def edit_tag(request, tag):
-
+    if not request.user.is_superuser:
+        raise PermissionDenied
     obj = Tag.objects.get(id=tag)
     # Template render
     template = loader.get_template('fit/add_tag.html')
@@ -178,6 +182,8 @@ def edit_tag(request, tag):
 
 # Delete existing tags
 def delete_tag(request, tag):
+    if not request.user.is_superuser:
+        raise PermissionDenied
     obj = Tag.objects.get(id=tag)
     try:
         obj.is_active = False
@@ -207,3 +213,16 @@ def add_event(request):
     }
     # Render the webpage
     return HttpResponse(template.render(context, request))
+
+# Delete existing events
+def delete_event(request, event):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
+    obj = Event.objects.get(id=event)
+    try:
+        obj.is_active = False
+        obj.save()
+    except:
+        messages.error(request, 'There are values that are still referenced')
+    return list(request)

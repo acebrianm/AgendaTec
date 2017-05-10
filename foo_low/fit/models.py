@@ -37,4 +37,4 @@ class Event(models.Model):
         return '%s' %self.event_name
 
     class Meta:
-        ordering = ['date']
+        ordering = ['-date']

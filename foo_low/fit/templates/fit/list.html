@@ -9,6 +9,7 @@
   </div>
 </div>
 {% endif %}
+
 <div class="row">
 {% if events %}
     {% for event, image in events %}
@@ -19,10 +20,22 @@
             {% endwith %}
             <div class="caption">
                 <h4><a href="{% url 'detail' event=event.id %}">{{event.event_name}}</a>
-                <h6 class="">{{ event.date }}</h6>
                 </h4>
+                <h6 class="">{{ event.date }}</h6>
+                    <span> 
+                        <h6>
+                            <div>Active: {{event.is_active }}</div>
+                        </h6>
+                    </span>
+                </h6>
                 <p>{{ event.description | truncatechars:80 }}</p>
             </div>
+            {% if user.is_superuser %}
+                <div class="ratings">
+                        {# <a href="{% url 'edit_event' event=event.id %}">Edit</a> #}
+                        <a href="{% url 'delete_event' event=event.id %}" class="pull-right">Delete</a>
+            </div>
+            {% endif %}
         </div>
     </div>
     {% endfor %}
