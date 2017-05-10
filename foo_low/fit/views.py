@@ -3,6 +3,7 @@ from django.template import loader
 from django.contrib.auth import logout, authenticate, login
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from .models import Tag, Profile, Event
 from .forms import TagForm, TagAdminForm
 from datetime import datetime
@@ -17,7 +18,7 @@ def index(request):
     else:
         # Template render
         template = loader.get_template('fit/index.html')
-        tag_list = Tag.objects.all()
+        tag_list = Tag.objects.all().filter(is_active=True)
         context = {
             'tag_list': tag_list
         }
@@ -47,7 +48,6 @@ def my_account(request):
 
     # Data from tags
     tags = Tag.objects.all().filter(is_active=True)
-
     # Data from user
     current_user = request.user
     username = current_user.username
@@ -107,7 +107,7 @@ def add_tag(request):
 
 def list(request, tag=None):
 
-    tag_list = Tag.objects.all()
+    tag_list = Tag.objects.all().filter(is_active=True)
 
     if request.user.is_superuser:
         if tag:
@@ -130,6 +130,29 @@ def list(request, tag=None):
         'events' : zip(events, images)
     }
     return HttpResponse(template.render(context, request))
+
+
+def detail_event(request, event=None):
+
+    tag_list = Tag.objects.all().filter(is_active=True)
+
+    if not request.user.is_authenticated or not event:
+        return index(request)
+
+    ev = get_object_or_404(Event, id=event)
+    print(ev)
+    template = loader.get_template("fit/detail.html")
+    image = "fit/images/" + ev.image.name.split('/')[4]
+    context = {
+        'tag_list': tag_list, 
+        'event' : ev,
+        'image' : image
+    }
+    return HttpResponse(template.render(context, request))
+
+
+
+
 
 def edit_tag(request, tag):
 

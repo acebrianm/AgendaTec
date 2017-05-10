@@ -11,20 +11,10 @@
                 <img src="{% static image_static %}" alt="">
             {% endwith %}
             <div class="caption">
-                <h4><a href="#">{{event.event_name}}</a>
+                <h4><a href="{% url 'detail' event=event.id %}">{{event.event_name}}</a>
                 <h6 class="">{{ event.date }}</h6>
                 </h4>
                 <p>{{ event.description | truncatechars:80 }}</p>
-            </div>
-            <div class="ratings">
-                <p class="pull-right">15 reviews</p>
-                <p>
-                    <span class="glyphicon glyphicon-star"></span>
-                    <span class="glyphicon glyphicon-star"></span>
-                    <span class="glyphicon glyphicon-star"></span>
-                    <span class="glyphicon glyphicon-star"></span>
-                    <span class="glyphicon glyphicon-star"></span>
-                </p>
             </div>
         </div>
     </div>
