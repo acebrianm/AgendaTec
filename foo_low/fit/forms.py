@@ -1,6 +1,7 @@
 from django.forms import ModelForm, CheckboxSelectMultiple
 from django import forms
 from django.contrib.admin.widgets import AdminDateWidget
+from django.forms.extras.widgets import SelectDateWidget
 from .models import Profile, Tag, Event
 
 class TagForm(ModelForm):
@@ -21,7 +22,7 @@ class EventForm(ModelForm):
     event_tag = forms.ModelMultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
         queryset=Tag.objects.all().filter(is_active=True))
-    date = forms.DateField(widget = AdminDateWidget())
+    date = forms.DateField(widget = SelectDateWidget)
         
     class Meta:
         model = Event

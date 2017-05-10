@@ -202,7 +202,7 @@ def add_event(request):
                          request.FILES or None,)
         if form.is_valid():
             form.save()
-            return my_account(request)
+            return list(request)
         
     else:
         form = EventForm()
