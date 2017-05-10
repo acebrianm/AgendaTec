@@ -29,9 +29,12 @@ def save_user_profile(sender, instance, **kwargs):
 class Event(models.Model):
     event_name = models.CharField(max_length=30)
     description = models.TextField(max_length=140)
-    image = models.ImageField(upload_to='images/')
+    image = models.ImageField(upload_to='fit/static/fit/images')
     date = models.DateField()
     event_tag = models.ManyToManyField(Tag)
     is_active = models.BooleanField(default=True)
     def __str__(self):
         return '%s' %self.event_name
+
+    class Meta:
+        ordering = ['date']
