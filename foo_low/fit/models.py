@@ -8,7 +8,6 @@ class Tag(models.Model):
     """
     Stores a single tag entry, it is related with :model:`fit.Event` and
     :model:`fit.Profile`
-    :model:`fit.Tag`.
     """
     tag_name = models.CharField(max_length=50)
     is_active = models.BooleanField(default=True)
@@ -18,7 +17,6 @@ class Tag(models.Model):
 class Profile(models.Model):
     """
     Stores a single profile entry, it is related with :model:`fit.Tag` 
-    :model:`fit.Profile`.
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_tag = models.ManyToManyField(Tag)
@@ -41,7 +39,6 @@ class Event(models.Model):
     """ 
     Stores a single entry for the events, related to model:`fit.Tag`.
     There is a many to many relationship with the model:`fit.Tag`.
-    :model:`fit.Event`
     """
     event_name = models.CharField(max_length=30)
     description = models.TextField(max_length=140)
