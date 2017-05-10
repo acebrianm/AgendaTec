@@ -32,7 +32,7 @@
             </div>
             {% if user.is_superuser %}
                 <div class="ratings">
-                        {# <a href="{% url 'edit_event' event=event.id %}">Edit</a> #}
+                        <a href="{% url 'edit_event' event=event.id %}">Edit</a>
                         <a href="{% url 'delete_event' event=event.id %}" class="pull-right">Delete</a>
             </div>
             {% endif %}
