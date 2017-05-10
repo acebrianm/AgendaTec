@@ -2,8 +2,14 @@
 {% load staticfiles%}
 {% block content %}
 
+{% if user.is_superuser %}
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3 text-center">
+    <a href="{% url 'add_event' %}" class="btn btn-success" style="margin-bottom:1em;">Agregar evento</a>
+  </div>
+</div>
+{% endif %}
 
-    
 <div class="row">
 {% if events %}
     {% for event, image in events %}
