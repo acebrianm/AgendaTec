@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^list/$', views.list, name='list'),
+    url(r'^add_event/$', views.add_event, name='add_event'),
     url(r'^list/(?P<tag>[0-9a-zA-Z_]+)/$', views.list, name="list"),
     url(r'^detail/(?P<event>[0-9a-zA-Z_]+)/$', views.detail_event, name="detail"),
     url(r'^my_account/$', views.my_account, name='my_account'),

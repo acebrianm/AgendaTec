@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from .models import Tag, Profile, Event
-from .forms import TagForm, TagAdminForm
+from .forms import TagForm, TagAdminForm, EventForm
 from datetime import datetime
 
 # Index redirection in the website.
@@ -150,10 +150,6 @@ def detail_event(request, event=None):
     }
     return HttpResponse(template.render(context, request))
 
-
-
-
-
 def edit_tag(request, tag):
 
     obj = Tag.objects.get(id=tag)
@@ -189,3 +185,25 @@ def delete_tag(request, tag):
     except:
         messages.error(request, 'There are values that are still referenced')
     return my_account(request)
+
+def add_event(request):
+    # Template render
+    template = loader.get_template('fit/add_event.html')
+    
+    # Create the form
+    if request.method == 'POST':
+        form = EventForm(request.POST or None,
+                         request.FILES or None,)
+        if form.is_valid():
+            form.save()
+            return my_account(request)
+        
+    else:
+        form = EventForm()
+
+    # Context for rendering
+    context = {
+        'form' : form,
+    }
+    # Render the webpage
+    return HttpResponse(template.render(context, request))
